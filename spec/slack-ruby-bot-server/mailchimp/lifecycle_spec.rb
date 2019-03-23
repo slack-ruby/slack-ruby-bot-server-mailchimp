@@ -29,22 +29,37 @@ describe SlackRubyBotServer::Mailchimp do
     allow(SlackRubyBotServer::Config.service_class.instance).to receive(:start!).with(team)
   end
 
-  it 'subscribes the activating user' do
-    expect(list.members).to receive(:where).with(email_address: 'user@example.com').and_return([])
-    expect(list.members).to receive(:create_or_update).with(
-      email_address: 'user@example.com',
-      merge_fields: {
-        'FNAME' => 'First',
-        'LNAME' => 'Last',
-        'BOT' => 'MailBot'
-      },
-      status: 'pending',
-      name: nil,
-      tags: %w[mailbot],
-      unique_email_id: "#{team.team_id}-activated_user_id"
-    )
+  context 'new subscription' do
+    before do
+      expect(list.members).to receive(:where).with(email_address: 'user@example.com').and_return([])
+    end
 
-    SlackRubyBotServer::Config.service_class.instance.create!(team)
+    it 'subscribes the activating user' do
+      expect(list.members).to receive(:create_or_update).with(
+        email_address: 'user@example.com',
+        merge_fields: {
+          'FNAME' => 'First',
+          'LNAME' => 'Last',
+          'BOT' => 'MailBot'
+        },
+        status: 'pending',
+        name: nil,
+        tags: %w[mailbot],
+        unique_email_id: "#{team.team_id}-activated_user_id"
+      )
+
+      SlackRubyBotServer::Config.service_class.instance.create!(team)
+    end
+
+    context 'with custom member status' do
+      before do
+        SlackRubyBotServer::Mailchimp.config.member_status = 'subscribed'
+      end
+      it 'subscribes the activating user with a different status' do
+        expect(list.members).to receive(:create_or_update).with(hash_including(status: 'subscribed'))
+        SlackRubyBotServer::Config.service_class.instance.create!(team)
+      end
+    end
   end
 
   context 'with tags' do

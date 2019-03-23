@@ -38,7 +38,7 @@ SlackRubyBotServer::Config.service_class.instance.on :created do |team, _error, 
     name: profile.name,
     email_address: profile.email,
     unique_email_id: "#{team.team_id}-#{team.activated_user_id}",
-    status: member ? member.status : 'pending',
+    status: member ? member.status : SlackRubyBotServer::Mailchimp.config.member_status,
     tags: tags,
     merge_fields: merge_fields
   )

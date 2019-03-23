@@ -20,16 +20,34 @@ Configure.
 SlackRubyBotServer::Mailchimp.configure do |config|
   config.mailchimp_api_key = ENV['MAILCHIMP_API_KEY'] # defaults to ENV['MAILCHIMP_API_KEY']
   config.mailchimp_list_id = ENV['MAILCHIMP_LIST_ID'] # defaults to ENV['MAILCHIMP_LIST_ID']
-  config.additional_member_tags = ['my_bot'] # any additional Mailchimp member tags
-  config.additional_merge_fields = { 'BOT' => 'MyBot' } # any additional Mailchimp member merge fields
 end
 ```
 
 Users that install the bot are automatically subscribed via [bot server lifecycle](lib/slack-ruby-bot-server/mailchimp/lifecycle.rb).
 
-### Team Tags
+### Additional Member Tags
 
-If your `Team` model responds to `.tags`, those will be merged onto member tags.
+If your `Team` model responds to `.tags`, those will be attached to new subscriptions and appear as "tags" in Mailchimp. You can also supplement member tags for new subscriptions through `member_tags` configuration.
+
+```ruby
+SlackRubyBotServer::Mailchimp.config.member_tags = ['my_bot']
+```
+
+### Additional Profile Information
+
+The default member profile information that appears in Mailchimp under "Profile Information" for each new subscriber contains the user's email address, first and last name from Slack. You can supplement this data with `additional_merge_fields`.
+
+```ruby
+SlackRubyBotServer::Mailchimp.config.additional_merge_fields = { 'BOT' => 'MyBot' }
+```
+
+### Double Opt-In
+
+This integration subscribes users with double opt-in by default. Configure `member_status` to disable double opt-in. See [this doc](https://developer.mailchimp.com/documentation/mailchimp/guides/manage-subscribers-with-the-mailchimp-api) for more details.
+
+```ruby
+SlackRubyBotServer::Mailchimp.config.member_status = 'subscribed'
+```
 
 ### Copyright & License
 
