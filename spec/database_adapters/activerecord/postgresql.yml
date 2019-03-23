@@ -1,0 +1,17 @@
+default: &default
+  adapter: postgresql
+  pool: 10
+  timeout: 5000
+  encoding: unicode
+
+development:
+  <<: *default
+  database: slack_ruby_bot_server_mailchimp_development
+
+test:
+  <<: *default
+  database: slack_ruby_bot_server_mailchimp__test
+
+production:
+  <<: *default
+  database: slack_ruby_bot_server_mailchimp_production

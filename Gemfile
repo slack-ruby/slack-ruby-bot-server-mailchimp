@@ -16,13 +16,21 @@ else
   warn "Invalid ENV['DATABASE_ADAPTER']: #{ENV['DATABASE_ADAPTER']}."
 end
 
+gem 'slack-ruby-bot-server', github: 'slack-ruby/slack-ruby-bot-server'
+
 gemspec
 
 group :development, :test do
   gem 'bundler'
+  gem 'database_cleaner'
+  gem 'fabrication'
+  gem 'faker'
+  gem 'rack-test'
   gem 'rake'
   gem 'rspec'
   gem 'rubocop', '0.66.0'
+  gem 'vcr'
+  gem 'webmock'
 end
 
 group :test do

@@ -11,5 +11,8 @@ Style/Documentation:
 Style/FrozenStringLiteralComment:
   Enabled: false
 
+Style/ModuleFunction:
+  EnforcedStyle: extend_self
+
 inherit_from: .rubocop_todo.yml
 
