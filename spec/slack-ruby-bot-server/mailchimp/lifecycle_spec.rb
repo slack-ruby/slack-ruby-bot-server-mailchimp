@@ -26,7 +26,7 @@ describe SlackRubyBotServer::Mailchimp do
 
     allow_any_instance_of(Mailchimp::Client).to receive(:lists).with('list-id').and_return(list)
 
-    allow(SlackRubyBotServer::Service.instance).to receive(:start!).with(team)
+    allow(SlackRubyBotServer::Config.service_class.instance).to receive(:start!).with(team)
   end
 
   it 'subscribes the activating user' do
@@ -44,7 +44,7 @@ describe SlackRubyBotServer::Mailchimp do
       unique_email_id: "#{team.team_id}-activated_user_id"
     )
 
-    SlackRubyBotServer::Service.instance.create!(team)
+    SlackRubyBotServer::Config.service_class.instance.create!(team)
   end
 
   context 'with tags' do
@@ -74,7 +74,7 @@ describe SlackRubyBotServer::Mailchimp do
         tags: %w[something subscribed mailbot trial],
         unique_email_id: "#{team.team_id}-activated_user_id"
       )
-      SlackRubyBotServer::Service.instance.create!(team)
+      SlackRubyBotServer::Config.service_class.instance.create!(team)
     end
 
     it 'does not attempt to create a new pending subscription' do
@@ -92,7 +92,7 @@ describe SlackRubyBotServer::Mailchimp do
         ]
       )
       expect(list.members).to_not receive(:create_or_update)
-      SlackRubyBotServer::Service.instance.create!(team)
+      SlackRubyBotServer::Config.service_class.instance.create!(team)
     end
   end
 end

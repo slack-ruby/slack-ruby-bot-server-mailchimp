@@ -1,4 +1,4 @@
-SlackRubyBotServer::Service.instance.on :created do |team, _error, _options|
+SlackRubyBotServer::Config.service_class.instance.on :created do |team, _error, _options|
   raise 'missing ENV["MAILCHIMP_API_KEY"]' unless SlackRubyBotServer::Mailchimp.config.mailchimp_api_key
   raise 'missing ENV["MAILCHIMP_LIST_ID"]' unless SlackRubyBotServer::Mailchimp.config.mailchimp_list_id
 
@@ -21,7 +21,10 @@ SlackRubyBotServer::Service.instance.on :created do |team, _error, _options|
   if member
     member_tags = member.tags.map { |tag| tag['name'] }.sort
     tags = (member_tags + tags).uniq
-    next if tags == member_tags
+    if tags == member_tags
+      SlackRubyBot::Client.logger.debug "Skipping #{profile.email} with identical tags (#{tags.join(', ')}), will not be added to #{SlackRubyBotServer::Mailchimp.config.mailchimp_list_id}, #{team}."
+      next
+    end
   end
 
   # merge fields

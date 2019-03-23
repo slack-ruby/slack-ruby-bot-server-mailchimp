@@ -4,7 +4,7 @@ Slack Ruby Bot Server Mailchimp Extension
 [![Gem Version](https://badge.fury.io/rb/slack-ruby-bot-server.svg)](https://badge.fury.io/rb/slack-ruby-bot-server)
 [![Build Status](https://travis-ci.org/slack-ruby/slack-ruby-bot-server-mailchimp.svg?branch=master)](https://travis-ci.org/slack-ruby/slack-ruby-bot-server-mailchimp)
 
-A Mailchimp extension to [slack-ruby-bot-server](https://github.com/slack-ruby/slack-ruby-bot-server). Offers new bot users an opportunity to subscribe to a Mailchimp mailing list.
+A lifecycle extension to [slack-ruby-bot-server](https://github.com/slack-ruby/slack-ruby-bot-server) that subscribes new bot users to a Mailchimp mailing list.
 
 ### Usage
 
@@ -29,7 +29,7 @@ Users that install the bot are automatically subscribed via [bot server lifecycl
 
 ### Team Tags
 
-If your `Team` model responds to `#tags`, those will be merged onto member tags.
+If your `Team` model responds to `.tags`, those will be merged onto member tags.
 
 ### Copyright & License
 
