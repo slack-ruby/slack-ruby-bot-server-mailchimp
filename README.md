@@ -33,12 +33,24 @@ If your `Team` model responds to `.tags`, those will be attached to new subscrip
 SlackRubyBotServer::Mailchimp.config.member_tags = ['my_bot']
 ```
 
+This can be a function that accepts a team and callback options.
+
+```ruby
+SlackRubyBotServer::Mailchimp.config.member_tags = ->(team, options) { [team.tags] }
+```
+
 ### Additional Profile Information
 
 The default member profile information that appears in Mailchimp under "Profile Information" for each new subscriber contains the user's email address, first and last name from Slack. You can supplement this data with `additional_merge_fields`.
 
 ```ruby
 SlackRubyBotServer::Mailchimp.config.additional_merge_fields = { 'BOT' => 'MyBot' }
+```
+
+This can be a function that accepts a team and callback options.
+
+```ruby
+SlackRubyBotServer::Mailchimp.config.additional_merge_fields = ->(team, options) { { 'TEAM' => team.name } }
 ```
 
 ### Double Opt-In

@@ -8,8 +8,6 @@ describe SlackRubyBotServer::Mailchimp do
     SlackRubyBotServer::Mailchimp.configure do |config|
       config.mailchimp_api_key = 'api-key'
       config.mailchimp_list_id = 'list-id'
-      config.additional_member_tags = ['mailbot']
-      config.additional_merge_fields = { 'BOT' => 'MailBot' }
     end
 
     allow_any_instance_of(Slack::Web::Client).to receive(:users_info).with(
@@ -29,6 +27,10 @@ describe SlackRubyBotServer::Mailchimp do
     allow(SlackRubyBotServer::Config.service_class.instance).to receive(:start!).with(team)
   end
 
+  after do
+    SlackRubyBotServer::Mailchimp.config.reset!
+  end
+
   context 'new subscription' do
     before do
       expect(list.members).to receive(:where).with(email_address: 'user@example.com').and_return([])
@@ -39,12 +41,11 @@ describe SlackRubyBotServer::Mailchimp do
         email_address: 'user@example.com',
         merge_fields: {
           'FNAME' => 'First',
-          'LNAME' => 'Last',
-          'BOT' => 'MailBot'
+          'LNAME' => 'Last'
         },
         status: 'pending',
         name: nil,
-        tags: %w[mailbot],
+        tags: %w[],
         unique_email_id: "#{team.team_id}-activated_user_id"
       )
 
@@ -81,12 +82,11 @@ describe SlackRubyBotServer::Mailchimp do
         email_address: 'user@example.com',
         merge_fields: {
           'FNAME' => 'First',
-          'LNAME' => 'Last',
-          'BOT' => 'MailBot'
+          'LNAME' => 'Last'
         },
         status: 'subscribed',
         name: nil,
-        tags: %w[something subscribed mailbot trial],
+        tags: %w[something subscribed trial],
         unique_email_id: "#{team.team_id}-activated_user_id"
       )
       SlackRubyBotServer::Config.service_class.instance.create!(team)
@@ -107,6 +107,132 @@ describe SlackRubyBotServer::Mailchimp do
         ]
       )
       expect(list.members).to_not receive(:create_or_update)
+      SlackRubyBotServer::Config.service_class.instance.create!(team)
+    end
+  end
+
+  context 'with globally configured tags' do
+    before do
+      SlackRubyBotServer::Mailchimp.config.additional_member_tags = ['mailbot']
+    end
+
+    it 'uses tags' do
+      expect(list.members).to receive(:where).with(email_address: 'user@example.com').and_return([])
+      expect(list.members).to receive(:create_or_update).with(
+        email_address: 'user@example.com',
+        merge_fields: { 'FNAME' => 'First', 'LNAME' => 'Last' },
+        status: 'pending',
+        name: nil,
+        tags: %w[mailbot],
+        unique_email_id: "#{team.team_id}-activated_user_id"
+      )
+      SlackRubyBotServer::Config.service_class.instance.create!(team)
+    end
+
+    it 'merges tags' do
+      expect(list.members).to receive(:where).with(email_address: 'user@example.com').and_return(
+        [
+          double(
+            Mailchimp::List::Member,
+            tags: [{ 'id' => 1513, 'name' => 'subscribed' }, { 'id' => 1525, 'name' => 'something' }],
+            status: 'subscribed'
+          )
+        ]
+      )
+      expect(list.members).to receive(:create_or_update).with(
+        email_address: 'user@example.com',
+        merge_fields: { 'FNAME' => 'First', 'LNAME' => 'Last' },
+        status: 'subscribed',
+        name: nil,
+        tags: %w[something subscribed mailbot],
+        unique_email_id: "#{team.team_id}-activated_user_id"
+      )
+      SlackRubyBotServer::Config.service_class.instance.create!(team)
+    end
+  end
+
+  context 'with dynamic tags' do
+    before do
+      SlackRubyBotServer::Mailchimp.config.additional_member_tags = ->(team, _options) { [team.id.to_s] }
+    end
+
+    it 'uses tags' do
+      expect(list.members).to receive(:where).with(email_address: 'user@example.com').and_return([])
+      expect(list.members).to receive(:create_or_update).with(
+        email_address: 'user@example.com',
+        merge_fields: { 'FNAME' => 'First', 'LNAME' => 'Last' },
+        status: 'pending',
+        name: nil,
+        tags: [team.id.to_s],
+        unique_email_id: "#{team.team_id}-activated_user_id"
+      )
+      SlackRubyBotServer::Config.service_class.instance.create!(team)
+    end
+
+    it 'merges tags' do
+      expect(list.members).to receive(:where).with(email_address: 'user@example.com').and_return(
+        [
+          double(
+            Mailchimp::List::Member,
+            tags: [{ 'id' => 1513, 'name' => 'subscribed' }, { 'id' => 1525, 'name' => 'something' }],
+            status: 'subscribed'
+          )
+        ]
+      )
+      expect(list.members).to receive(:create_or_update).with(
+        email_address: 'user@example.com',
+        merge_fields: { 'FNAME' => 'First', 'LNAME' => 'Last' },
+        status: 'subscribed',
+        name: nil,
+        tags: ['something', 'subscribed', team.id.to_s],
+        unique_email_id: "#{team.team_id}-activated_user_id"
+      )
+      SlackRubyBotServer::Config.service_class.instance.create!(team)
+    end
+  end
+
+  context 'with globally configured merge fields' do
+    before do
+      SlackRubyBotServer::Mailchimp.config.additional_merge_fields = { 'BOT' => 'MailBot' }
+    end
+
+    it 'merges fields' do
+      expect(list.members).to receive(:where).with(email_address: 'user@example.com').and_return([])
+      expect(list.members).to receive(:create_or_update).with(
+        email_address: 'user@example.com',
+        merge_fields: {
+          'BOT' => 'MailBot',
+          'FNAME' => 'First',
+          'LNAME' => 'Last'
+        },
+        status: 'pending',
+        name: nil,
+        tags: %w[],
+        unique_email_id: "#{team.team_id}-activated_user_id"
+      )
+      SlackRubyBotServer::Config.service_class.instance.create!(team)
+    end
+  end
+
+  context 'with globally configured dynamic merge fields' do
+    before do
+      SlackRubyBotServer::Mailchimp.config.additional_merge_fields = ->(team, _options) { { 'ID' => team.id.to_s } }
+    end
+
+    it 'merges fields' do
+      expect(list.members).to receive(:where).with(email_address: 'user@example.com').and_return([])
+      expect(list.members).to receive(:create_or_update).with(
+        email_address: 'user@example.com',
+        merge_fields: {
+          'ID' => team.id.to_s,
+          'FNAME' => 'First',
+          'LNAME' => 'Last'
+        },
+        status: 'pending',
+        name: nil,
+        tags: %w[],
+        unique_email_id: "#{team.team_id}-activated_user_id"
+      )
       SlackRubyBotServer::Config.service_class.instance.create!(team)
     end
   end
