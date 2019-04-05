@@ -1,4 +1,4 @@
-SlackRubyBotServer::Config.service_class.instance.on :created do |team, _error, _options|
+SlackRubyBotServer::Config.service_class.instance.on :created do |team, _error, options|
   raise 'missing ENV["MAILCHIMP_API_KEY"]' unless SlackRubyBotServer::Mailchimp.config.mailchimp_api_key
   raise 'missing ENV["MAILCHIMP_LIST_ID"]' unless SlackRubyBotServer::Mailchimp.config.mailchimp_list_id
 
@@ -15,6 +15,7 @@ SlackRubyBotServer::Config.service_class.instance.on :created do |team, _error, 
 
   # fetch and merge member tags
   tags = SlackRubyBotServer::Mailchimp.config.additional_member_tags
+  tags = tags.call(team, options) if tags.respond_to?(:call)
   tags = (tags + team.tags).uniq if team.respond_to?(:tags)
 
   member = mailchimp_list.members.where(email_address: profile.email).first
@@ -28,7 +29,9 @@ SlackRubyBotServer::Config.service_class.instance.on :created do |team, _error, 
   end
 
   # merge fields
-  merge_fields = SlackRubyBotServer::Mailchimp.config.additional_merge_fields.merge(
+  merge_fields = SlackRubyBotServer::Mailchimp.config.additional_merge_fields
+  merge_fields = merge_fields.call(team, options) if merge_fields.respond_to?(:call)
+  merge_fields = merge_fields.merge(
     'FNAME' => profile.first_name.to_s,
     'LNAME' => profile.last_name.to_s
   )
