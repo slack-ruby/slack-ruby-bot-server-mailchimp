@@ -12,7 +12,7 @@ Fork the [project on Github](https://github.com/slack-ruby/slack-ruby-bot-server
 
 ```
 git clone https://github.com/contributor/slack-ruby-bot-server-mailchimp.git
-cd slack-ruby-bot-server
+cd slack-ruby-bot-server-mailchimp
 git remote add upstream https://github.com/slack-ruby/slack-ruby-bot-server-mailchimp.git
 ```
 
@@ -84,7 +84,7 @@ git push origin my-feature-branch
 
 ## Make a Pull Request
 
-Go to https://github.com/contributor/slack-ruby-bot-server and select your feature branch.
+Go to https://github.com/contributor/slack-ruby-bot-server-mailchimp and select your feature branch.
 Click the 'Pull Request' button and fill out the form. Pull requests are usually reviewed within a few days.
 
 ## Rebase
