@@ -21,18 +21,10 @@ Change "Next" in [CHANGELOG.md](CHANGELOG.md) to the current date.
 
 Remove the line with "Your contribution here.", since there will be no more contributions to this release.
 
-Change `**next**` in the "Stable Release" section in README that warns users that they are reading the documentation for an unreleased version with `**stable**`.
-
-```
-## Stable Release
-
-You're reading the documentation for the **stable** release of slack-ruby-bot-server, 0.2.2. See [UPGRADING](UPGRADING.md) when upgrading from an older version.
-```
-
 Commit your changes.
 
 ```
-git add README.md CHANGELOG.md
+git add CHANGELOG.md
 git commit -m "Preparing for release, 0.2.2."
 git push origin master
 ```
@@ -42,10 +34,10 @@ Release.
 ```
 $ rake release
 
-slack-ruby-bot-server 0.2.2 built to pkg/slack-ruby-bot-server-0.2.2.gem.
+slack-ruby-bot-server-mailchimp 0.2.2 built to pkg/slack-ruby-bot-server-mailchimp-0.2.2.gem.
 Tagged v0.2.2.
 Pushed git commits and tags.
-Pushed slack-ruby-bot-server 0.2.2 to rubygems.org.
+Pushed slack-ruby-bot-server-mailchimp 0.2.2 to rubygems.org.
 ```
 
 ### Prepare for the Next Version
@@ -60,18 +52,10 @@ Add the next release to [CHANGELOG.md](CHANGELOG.md).
 
 Increment the third version number in [lib/slack-ruby-bot-server-mailchimp/version.rb](lib/slack-ruby-bot-server-mailchimp/version.rb).
 
-Undo your change in README about the stable release.
-
-```
-## Stable Release
-
-You're reading the documentation for the **next** release of slack-ruby-bot-server. Please see the documentation for the [last stable release, v0.2.2](https://github.com/slack-ruby/slack-ruby-bot-server-mailchimp/blob/v0.2.2/README.md) unless you're integrating with HEAD. See [UPGRADING](UPGRADING.md) when upgrading from an older version.
-```
-
 Commit your changes.
 
 ```
-git add README.md CHANGELOG.md lib/slack-ruby-bot-server-mailchimp/version.rb
+git add CHANGELOG.md lib/slack-ruby-bot-server-mailchimp/version.rb
 git commit -m "Preparing for next development iteration, 0.2.3."
 git push origin master
 ```
