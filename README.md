@@ -2,7 +2,9 @@ Slack Ruby Bot Server Mailchimp Extension
 =========================================
 
 [![Gem Version](https://badge.fury.io/rb/slack-ruby-bot-server-mailchimp.svg)](https://badge.fury.io/rb/slack-ruby-bot-server-mailchimp)
-[![Build Status](https://travis-ci.org/slack-ruby/slack-ruby-bot-server-mailchimp.svg?branch=master)](https://travis-ci.org/slack-ruby/slack-ruby-bot-server-mailchimp)
+[![mongodb](https://github.com/slack-ruby/slack-ruby-bot-server-mailchimp/actions/workflows/test-mongodb.yml/badge.svg)](https://github.com/slack-ruby/slack-ruby-bot-server-mailchimp/actions/workflows/test-mongodb.yml)
+[![postgresql](https://github.com/slack-ruby/slack-ruby-bot-server-mailchimp/actions/workflows/test-postgresql.yml/badge.svg)](https://github.com/slack-ruby/slack-ruby-bot-server-mailchimp/actions/workflows/test-postgresql.yml)
+[![rubocop](https://github.com/slack-ruby/slack-ruby-bot-server-mailchimp/actions/workflows/rubocop.yml/badge.svg)](https://github.com/slack-ruby/slack-ruby-bot-server-mailchimp/actions/workflows/rubocop.yml)
 
 A lifecycle extension to [slack-ruby-bot-server](https://github.com/slack-ruby/slack-ruby-bot-server) that subscribes new bot users to a Mailchimp mailing list.
 
