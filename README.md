@@ -8,6 +8,14 @@ Slack Ruby Bot Server Mailchimp Extension
 
 A lifecycle extension to [slack-ruby-bot-server](https://github.com/slack-ruby/slack-ruby-bot-server) that subscribes new bot users to a Mailchimp mailing list.
 
+# Table of Contents
+
+- [Usage](#usage)
+- [Additional Member Tags](#additional-member-tags)
+- [Additional Profile Information](#additional-profile-information)
+- [Double Opt-In](#double-opt-in)
+- [Copyright & License](#copyright--license)
+
 ### Usage
 
 Add 'slack-ruby-bot-server-mailchimp' to Gemfile.

@@ -15,5 +15,5 @@ Gem::Specification.new do |spec|
   spec.require_paths = ['lib']
 
   spec.add_dependency 'mailchimp_api_v3'
-  spec.add_dependency 'slack-ruby-bot-server', '>= 0.10.0'
+  spec.add_dependency 'slack-ruby-bot-server', '>= 2.0.1'
 end

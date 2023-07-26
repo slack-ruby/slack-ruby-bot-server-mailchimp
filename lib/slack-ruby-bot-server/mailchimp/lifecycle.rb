@@ -23,7 +23,7 @@ SlackRubyBotServer::Config.service_class.instance.on :created do |team, _error, 
     member_tags = member.tags.map { |tag| tag['name'] }.sort
     tags = (member_tags + tags).uniq
     if tags == member_tags
-      SlackRubyBot::Client.logger.debug "Skipping #{profile.email} with identical tags (#{tags.join(', ')}), will not be added to #{SlackRubyBotServer::Mailchimp.config.mailchimp_list_id}, #{team}."
+      SlackRubyBotServer::Service.logger.debug "Skipping #{profile.email} with identical tags (#{tags.join(', ')}), will not be added to #{SlackRubyBotServer::Mailchimp.config.mailchimp_list_id}, #{team}."
       next
     end
   end
@@ -46,5 +46,5 @@ SlackRubyBotServer::Config.service_class.instance.on :created do |team, _error, 
     merge_fields: merge_fields
   )
 
-  SlackRubyBot::Client.logger.info "Subscribed #{profile.email} to #{SlackRubyBotServer::Mailchimp.config.mailchimp_list_id}, #{team}."
+  SlackRubyBotServer::Service.logger.info "Subscribed #{profile.email} to #{SlackRubyBotServer::Mailchimp.config.mailchimp_list_id}, #{team}."
 end
