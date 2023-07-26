@@ -1,8 +1,9 @@
 ### Changelog
 
-#### 0.2.1 (Next)
+#### 0.3.0 (Next)
 
 * [#4](https://github.com/slack-ruby/slack-ruby-bot-server-mailchimp/pull/4): Replaced Travis-CI with GitHub Actions - [@dblock](https://github.com/dblock).
+* [#3](https://github.com/slack-ruby/slack-ruby-bot-server-mailchimp/pull/3): Fix: invalid logger reference - [@dblock](https://github.com/dblock).
 * Your contribution here.
 
 #### 0.2.0 (2019/4/6)
